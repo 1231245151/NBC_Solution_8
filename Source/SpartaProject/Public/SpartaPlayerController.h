@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -39,6 +39,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Menu")
 	UUserWidget* MainMenuWidgetInstance;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameOver")
+    TSubclassOf<UUserWidget> GameOverWidgetClass;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameOver")
+    UUserWidget* GameOverWidgetInstance;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelClear")
+    TSubclassOf<UUserWidget> LevelClearWidgetClass;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LevelClear")
+    UUserWidget* LevelClearWidgetInstance;
+
 	UFUNCTION(BlueprintPure, Category = "HUD")
 	UUserWidget* GetHUDWidget() const;
 
@@ -48,6 +58,15 @@ public:
 	void ShowMainMenu(bool bIsRestart);
 	UFUNCTION(BlueprintCallable, Category = "Menu")
 	void StartGame();
+    UFUNCTION(BlueprintCallable, Category = "Menu")
+    void ShowGameOverMenu();
+    UFUNCTION(BlueprintCallable, Category = "Menu")
+    void ReturnMainMenu();
+    UFUNCTION(BlueprintCallable, Category = "Menu")
+    void EndGame();
+    UFUNCTION(BlueprintCallable, Category = "Menu")
+    void NextLevelStage();
+    void ShowLevelClear();
 
 protected:
 	virtual void BeginPlay() override;

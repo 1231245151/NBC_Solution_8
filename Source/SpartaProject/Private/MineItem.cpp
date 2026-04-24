@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MineItem.h"
@@ -28,8 +28,8 @@ void AMineItem::ActivateItem(AActor* Activator)
 		return;
 
 	Super::ActivateItem(Activator);
-	// °ÔÀÓ ¿ùµå -> Å¸ÀÌ¸Ó ¸Å´ÏÀú
-	// Å¸ÀÌ¸Ó ÇÚµé·¯
+	// ê²Œìž„ ì›”ë“œ -> íƒ€ì´ë¨¸ ë§¤ë‹ˆì €
+	// íƒ€ì´ë¨¸ í•¸ë“¤ëŸ¬
 	GetWorld()->GetTimerManager().SetTimer(ExplosionTimerHandle, this, &AMineItem::Explode, ExplosionDelay, false);
 
 	bIsExploded = true;
@@ -37,7 +37,6 @@ void AMineItem::ActivateItem(AActor* Activator)
 
 void AMineItem::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetWorld()->GetTimerManager().ClearTimer(ExplosionTimerHandle);
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -80,13 +79,16 @@ void AMineItem::Explode()
 
 	if (Particle)
 	{
+        TWeakObjectPtr<UParticleSystemComponent> WeakParticle = Particle;
+
 		GetWorld()->GetTimerManager().SetTimer(
 			DestroyParticleTimerHandle,
-			[Particle]()
+			[WeakParticle]()
 			{
-				Particle->DestroyComponent();
+                if(WeakParticle.IsValid())
+                    WeakParticle->DestroyComponent();
 			},
-			2.f,
+			2.0f,
 			false
 		);
 	}

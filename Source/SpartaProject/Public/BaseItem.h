@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -31,13 +31,13 @@ protected:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// ·çÆ® ÄÄÆ÷³ÍÆ® (¾À)
+	// ë£¨íŠ¸ ì»´í¬ë„ŒíŠ¸ (ì”¬)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Component")
 	USceneComponent* Scene;
-	// Ãæµ¹ ÄÄÆ÷³ÍÆ® (ÇÃ·¹ÀÌ¾î ÁøÀÔ ¹üÀ§ °¨Áö¿ë)
+	// ì¶©ëŒ ì»´í¬ë„ŒíŠ¸ (í”Œë ˆì´ì–´ ì§„ì… ë²”ìœ„ ê°ì§€ìš©)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Component")
 	USphereComponent* Collision;
-	// ¾ÆÀÌÅÛ ½Ã°¢ Ç¥Çö¿ë ½ºÅÂÆ½ ¸Ş½Ã
+	// ì•„ì´í…œ ì‹œê° í‘œí˜„ìš© ìŠ¤íƒœí‹± ë©”ì‹œ
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item|Component")
 	UStaticMeshComponent* StaticMesh;
 
@@ -47,7 +47,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Effects")
 	USoundBase* PickupSound;
 
-	// IItemInterfaceÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+	// IItemInterfaceì„(ë¥¼) í†µí•´ ìƒì†ë¨
 	virtual void OnItemOverlap(
 		UPrimitiveComponent* OverlappedComp,
 		AActor* OtherActor,
