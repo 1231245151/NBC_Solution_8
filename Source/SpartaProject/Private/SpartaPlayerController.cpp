@@ -6,6 +6,8 @@
 #include "Components/TextBlock.h"
 #include "SpartaGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "SpartaCharacter.h"
+#include "Components/ProgressBar.h"
 
 ASpartaPlayerController::ASpartaPlayerController()
 	:InputMappingContext(nullptr)
@@ -21,6 +23,8 @@ ASpartaPlayerController::ASpartaPlayerController()
     , GameOverWidgetInstance(nullptr)
     , LevelClearWidgetClass(nullptr)
     , LevelClearWidgetInstance(nullptr)
+    , PlayerUIWidgetClass(nullptr)
+    , PlayerUIWidgetInstance(nullptr)
 {
 }
 
@@ -76,6 +80,11 @@ void ASpartaPlayerController::ShowGameHUD()
         GameOverWidgetInstance->RemoveFromParent();
         GameOverWidgetInstance = nullptr;
     }
+    if (PlayerUIWidgetInstance)
+    {
+        PlayerUIWidgetInstance->RemoveFromParent();
+        PlayerUIWidgetInstance = nullptr;
+    }
 
 	if (HUDWidgetClass)
 	{
@@ -94,6 +103,21 @@ void ASpartaPlayerController::ShowGameHUD()
 			}
 		}
 	}
+
+    if (PlayerUIWidgetClass)
+    {
+        PlayerUIWidgetInstance = CreateWidget<UUserWidget>(this, PlayerUIWidgetClass);
+        if (PlayerUIWidgetInstance)
+        {
+            PlayerUIWidgetInstance->AddToViewport();
+
+            bShowMouseCursor = false;
+            SetInputMode(FInputModeGameOnly());
+
+            // 생성 직후 데이터 반영
+            UpdatePlayerStat();
+        }
+    }
 }
 
 void ASpartaPlayerController::ShowMainMenu(bool bIsRestart)
@@ -104,6 +128,11 @@ void ASpartaPlayerController::ShowMainMenu(bool bIsRestart)
 		HUDWidgetInstance->RemoveFromParent();
 		HUDWidgetInstance = nullptr;
 	}
+    if (PlayerUIWidgetInstance)
+    {
+        PlayerUIWidgetInstance->RemoveFromParent();
+        PlayerUIWidgetInstance = nullptr;
+    }
 
 	// 이미 메뉴가 떠 있으면 제거
 	if (MainMenuWidgetInstance)
@@ -306,6 +335,43 @@ void ASpartaPlayerController::ShowLevelClear()
                 }
             }
         }
+    }
+}
+
+void ASpartaPlayerController::UpdatePlayerStat()
+{
+    if (!PlayerUIWidgetInstance)
+        return;
+
+    ASpartaCharacter* Pcharact = Cast<ASpartaCharacter>(GetPawn());
+    if (!Pcharact)
+        return;
+
+    // HP바
+    if (UProgressBar* HPBar = Cast<UProgressBar>(PlayerUIWidgetInstance->GetWidgetFromName(TEXT("HPBar"))))
+    {
+        float HPPercent = (Pcharact->GetMaxHealth() > 0) ? ((float)Pcharact->GetHealth() / (float)Pcharact->GetMaxHealth()) : 0.0f;
+        HPBar->SetPercent(HPPercent);
+    }
+
+    // HP텍스트
+    if (UTextBlock* HPText = Cast<UTextBlock>(PlayerUIWidgetInstance->GetWidgetFromName(TEXT("HPText"))))
+    {
+        HPText->SetText(FText::FromString(FString::Printf(TEXT("%d / %d"),
+            Pcharact->GetHealth(), Pcharact->GetMaxHealth())));
+    }
+
+    // 상태이상
+    if (UTextBlock* StatusText = Cast<UTextBlock>(PlayerUIWidgetInstance->GetWidgetFromName(TEXT("StatusText"))))
+    {
+        FString Msg = "";
+        if (Pcharact->GetSlowStackCount() > 0)
+            Msg += FString::Printf(TEXT("[Slow] stack :%d (%.1fs)\n"), Pcharact->GetSlowStackCount(), Pcharact->GetSlowStackMaxRemainTime());
+
+        if (Pcharact->IsReverseControl())
+            Msg += FString::Printf(TEXT("[Reverse Control] (%.1fs)\n"), Pcharact->GetReverseControlRemainTime());
+
+        StatusText->SetText(FText::FromString(Msg));
     }
 }
 

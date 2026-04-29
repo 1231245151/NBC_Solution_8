@@ -1,10 +1,10 @@
-
+ï»¿
 #include "HealingItem.h"
 #include "SpartaCharacter.h"
 
 AHealingItem::AHealingItem()
 {
-	HealAmount = 20.0f;
+	HealAmount = 20;
 	ItemType = "Healing";
 }
 
@@ -16,10 +16,11 @@ void AHealingItem::ActivateItem(AActor* Activator)
 	{
 		if (ASpartaCharacter* PlayerCharacter = Cast<ASpartaCharacter>(Activator))
 		{
-			// Ä³¸¯ÅÍÀÇ Ã¼·ÂÀ» È¸º¹
+			// ìºë¦­í„°ì˜ ì²´ë ¥ì„ íšŒë³µ
 			PlayerCharacter->AddHealth(HealAmount);
 		}
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Player Gained %d HP"), HealAmount));
+        SpawnFloatingText(FString::Printf(TEXT("+HP %d"), HealAmount), FColor::Green);
 		DestroyItem();
 	}
 }

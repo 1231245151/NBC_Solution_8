@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "ItemSpawnRow.h"
@@ -30,4 +30,6 @@ public:
 	FItemSpawnRow* GetRandomItem() const;
 	AActor* SpawnItem(TSubclassOf<AActor> ItemClass);
 	FVector GetRandomPointInVolume() const;
+    // 함정 설치용 클래스
+    void SpawnTraps(TSubclassOf<AActor> TrapClass, int32 Count);
 };

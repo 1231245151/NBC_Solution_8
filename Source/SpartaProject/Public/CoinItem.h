@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -17,9 +17,12 @@ class SPARTAPROJECT_API ACoinItem : public ABaseItem
 public:
 	ACoinItem();
 
+    bool IsGoodCoin();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Coin")
 	int32 PointValue;
+    bool bIsGoodCoin;
 	
 	virtual void ActivateItem(AActor* Activator) override;
 };

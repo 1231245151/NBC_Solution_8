@@ -7,6 +7,9 @@
 #include "Components/TextBlock.h"
 #include "Blueprint/UserWidget.h"
 #include "WaveDataRow.h"
+#include "SpikeTrap.h"
+#include "ExplosionTrap.h"
+#include "GameFramework/Character.h"
 
 ASpartaGameState::ASpartaGameState()
 {
@@ -210,7 +213,10 @@ void ASpartaGameState::StartWave()
                 if (SpawnVolume)
                 {
                     AActor* SpawnedActor = SpawnVolume->SpawnRandomItem();
-                    if (SpawnedActor && SpawnedActor->IsA(ACoinItem::StaticClass()))
+
+                    // 점수아이템 확인
+                    ACoinItem* CoinItem = Cast<ACoinItem>(SpawnedActor);
+                    if (CoinItem && CoinItem->IsGoodCoin())
                     {
                         SpawnedCoinCount++;
                     }
@@ -219,11 +225,34 @@ void ASpartaGameState::StartWave()
         }
     }
 
+    // 웨이브에 따른 함정 스폰
+    if (FoundVolumes.Num() > 0 && CurrentWaveIndex == 1)
+    {
+        ASpawnVolume* SpawnVolume = Cast<ASpawnVolume>(FoundVolumes[0]);
+        SpawnVolume->SpawnTraps(SpikeTrapClass, 15);
+    }
+    if (FoundVolumes.Num() > 0 && CurrentWaveIndex == 2)
+    {
+        GetWorldTimerManager().SetTimer(ExplosionSpawnTimerHandle, this, &ASpartaGameState::SpawnExplosionAtPlayer, 5.0f, true, 0.1f);
+    }
+
     // HUD갱신
     UpdateHUD();
 
     // 다음 웨이브를 위한 타이머 설정
     GetWorldTimerManager().SetTimer(LevelTimerHandle, this, &ASpartaGameState::OnLevelTimeUp, AllRows[CurrentWaveIndex]->WaveTimer, false);
+}
+
+void ASpartaGameState::SpawnExplosionAtPlayer()
+{
+    ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    if (PlayerCharacter)
+    {
+        FVector SpawnLocation = PlayerCharacter->GetActorLocation();
+        SpawnLocation.Z = 0.f; // 바닥 높이 고정
+
+        GetWorld()->SpawnActor<AExplosionTrap>(ExplosionTrapClass, SpawnLocation, FRotator::ZeroRotator);
+    }
 }
 
 void ASpartaGameState::EndWave()

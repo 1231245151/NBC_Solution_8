@@ -8,6 +8,7 @@
 #include "BaseItem.generated.h"
 
 class USphereComponent;
+class ASpartaFloatingText;
 
 UCLASS()
 class SPARTAPROJECT_API ABaseItem : public AActor, public IItemInterface
@@ -25,7 +26,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FName ItemType;
-
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<ASpartaFloatingText> FloatingTextClass;
 	FTimerHandle DestroyParticleTimerHandle;
 
 	// Called every frame
@@ -62,6 +64,7 @@ protected:
 		int32 OtherBodyIndex) override;
 	void ActivateItem(AActor* Activator) override;
 	FName GetItemType() const override;
+    virtual void SpawnFloatingText(FString Message, FColor Color) override;
 
 	virtual void DestroyItem();
 

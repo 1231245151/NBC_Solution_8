@@ -1,4 +1,4 @@
-#include "CoinItem.h"
+﻿#include "CoinItem.h"
 //#include "Engine/World.h"
 #include "SpartaGameState.h"
 
@@ -6,6 +6,11 @@ ACoinItem::ACoinItem()
 {
 	PointValue = 0;
 	ItemType = "DefaultCoin";
+}
+
+bool ACoinItem::IsGoodCoin()
+{
+	return bIsGoodCoin;
 }
 
 void ACoinItem::ActivateItem(AActor* Activator)
@@ -19,7 +24,9 @@ void ACoinItem::ActivateItem(AActor* Activator)
 			if (ASpartaGameState* GameState = World->GetGameState<ASpartaGameState>())
 			{
 				GameState->AddScore(PointValue);
-				GameState->OnCoinCollected();
+
+                if(bIsGoodCoin)
+				    GameState->OnCoinCollected();
 			}
 		}
 		

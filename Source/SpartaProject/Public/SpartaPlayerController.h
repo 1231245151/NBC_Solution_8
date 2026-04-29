@@ -49,6 +49,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LevelClear")
     UUserWidget* LevelClearWidgetInstance;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+    TSubclassOf<UUserWidget> PlayerUIWidgetClass;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+    UUserWidget* PlayerUIWidgetInstance;
+
 	UFUNCTION(BlueprintPure, Category = "HUD")
 	UUserWidget* GetHUDWidget() const;
 
@@ -67,6 +72,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Menu")
     void NextLevelStage();
     void ShowLevelClear();
+    void UpdatePlayerStat();
 
 protected:
 	virtual void BeginPlay() override;

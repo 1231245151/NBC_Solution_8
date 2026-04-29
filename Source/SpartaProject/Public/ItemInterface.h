@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -34,10 +34,10 @@ public:
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex) = 0;
-    // ¾ÆÀÌÅÛÀÌ »ç¿ëµÇ¾úÀ» ¶§ È£Ãâ
+    // ì•„ì´í…œì´ ì‚¬ìš©ë˜ì—ˆì„ ë•Œ í˜¸ì¶œ
     virtual void ActivateItem(AActor* Activator) = 0;
-    // ÀÌ ¾ÆÀÌÅÛÀÇ À¯Çü(Å¸ÀÔ)À» ¹İÈ¯ (¿¹: "Coin", "Mine" µî)
+    // ì´ ì•„ì´í…œì˜ ìœ í˜•(íƒ€ì…)ì„ ë°˜í™˜ (ì˜ˆ: "Coin", "Mine" ë“±)
     virtual FName GetItemType() const = 0;
-
+    virtual void SpawnFloatingText(FString Message, FColor Color) = 0;
 
 };

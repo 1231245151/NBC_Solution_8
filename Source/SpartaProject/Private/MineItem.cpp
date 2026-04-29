@@ -72,6 +72,8 @@ void AMineItem::Explode()
 		{
 			UGameplayStatics::ApplyDamage(Actor, ExplosionDamage, nullptr, this, UDamageType::StaticClass());
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Player damaged %d by MineItem"), ExplosionDamage));
+
+            SpawnFloatingText(FString::Printf(TEXT("-HP %d"), ExplosionDamage), FColor::Red);
 		}
 	}
 

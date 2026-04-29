@@ -2,6 +2,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "SpartaFloatingText.h"
 
 ABaseItem::ABaseItem()
 {
@@ -63,7 +64,7 @@ void ABaseItem::OnItemOverlap(UPrimitiveComponent* OverlappedComp,
 {
 	if (OtherActor && OtherActor->ActorHasTag("Player"))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Overlap!!!")));
+		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, FString::Printf(TEXT("Overlap!!!")));
 		ActivateItem(OtherActor);
 	}
 
@@ -124,6 +125,27 @@ void ABaseItem::ActivateItem(AActor* Activator)
 FName ABaseItem::GetItemType() const
 {
 	return ItemType;
+}
+
+void ABaseItem::SpawnFloatingText(FString Message, FColor Color)
+{
+    if (!FloatingTextClass)
+        return;
+
+    FVector SpawnLocation = GetActorLocation() + FVector(0.f, 0.f, 50.f);
+
+    // 위젯액터 스폰
+    ASpartaFloatingText* NewFloatingText = GetWorld()->SpawnActor<ASpartaFloatingText>(
+        FloatingTextClass,
+        SpawnLocation,
+        FRotator::ZeroRotator
+    );
+
+    // 출력할 텍스트 보냄
+    if (NewFloatingText)
+    {
+        NewFloatingText->InitializeText(Message, Color);
+    }
 }
 
 void ABaseItem::DestroyItem()

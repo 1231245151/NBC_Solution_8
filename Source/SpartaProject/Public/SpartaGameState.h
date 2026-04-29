@@ -6,9 +6,9 @@
 #include "GameFramework/GameState.h"
 #include "SpartaGameState.generated.h"
 
-/**
- * 
- */
+class AExplosionTrap;
+class ASpikeTrap;
+
 UCLASS()
 class SPARTAPROJECT_API ASpartaGameState : public AGameState
 {
@@ -48,9 +48,17 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
     int32 CurrentWaveIndex;
 
+    // 트랩 클래스
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+    TSubclassOf<ASpikeTrap> SpikeTrapClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+    TSubclassOf<AExplosionTrap> ExplosionTrapClass;
+
 	// 매 레벨이 끝나기 전까지 시간이 흐르도록 관리하는 타이머
 	FTimerHandle LevelTimerHandle;
 	FTimerHandle HUDUpdateTimerHandle;
+    FTimerHandle ExplosionSpawnTimerHandle;
 
     // 현재 점수를 읽는 함수
     UFUNCTION(BlueprintPure, Category = "Score")
@@ -62,6 +70,9 @@ public:
     void AddScore(int32 Amount);
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	void OnGameOver();
+    // 플레이어 따라 지면폭파하는 폭팔 트랩
+    UFUNCTION(BlueprintCallable, Category = "Spawn")
+    void SpawnExplosionAtPlayer();
 
     void StartWave();
     void EndWave();
